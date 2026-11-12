@@ -1,0 +1,95 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#e31e24"><link rel="apple-touch-icon" href="icon-192.png"><title>Каталог — Субхи заррин</title>
+<link href="https://fonts.googleapis.com/css2?family=Lobster&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f1f6f8;--card:#fff;--ink:#1d2a5c;--mut:#5b6690;--line:#dbe3ea;--red:#e31e24}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1420;--card:#171e2e;--ink:#e8ecfa;--mut:#9aa6c8;--line:#2a3350}}
+:root[data-theme="dark"]{--bg:#0f1420;--card:#171e2e;--ink:#e8ecfa;--mut:#9aa6c8;--line:#2a3350}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-snap-type:y proximity}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--card);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;display:flex;align-items:center;gap:12px;padding:10px 20px;background:var(--card);border-bottom:1px solid var(--line);height:60px}
+.brand{font-family:Lobster,cursive;font-size:30px;color:var(--red);flex:1;line-height:1}
+.chip{font-size:12px;color:var(--mut)}button{font:inherit;cursor:pointer}
+.btn{border:0;border-radius:999px;padding:9px 16px;background:var(--red);color:#fff;font-weight:700}.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.prod{min-height:calc(100svh - 60px);display:flex;flex-direction:column;scroll-snap-align:start;position:relative}
+.hero{height:46svh;min-height:240px;position:relative;overflow:hidden;background:var(--line)}
+.hero img{width:100%;height:100%;object-fit:cover;display:block}
+.hero::after{content:"";position:absolute;left:-8%;right:-8%;bottom:-70px;height:120px;background:var(--bg);border-top:7px solid var(--acc);border-radius:50% 50% 0 0/100% 100% 0 0}
+.body{flex:1;display:grid;grid-template-columns:1fr 1.2fr;gap:28px;align-items:center;padding:8px 5vw 56px}
+.pack img{width:100%;max-width:400px;border-radius:14px;box-shadow:0 14px 30px #0003;display:block;margin:auto}
+.kind{text-align:right;font-family:Lobster,cursive;color:var(--red);font-size:24px}
+h2{font-family:Lobster,cursive;font-weight:400;color:var(--red);font-size:clamp(40px,6vw,72px);margin:0 0 14px;line-height:1.05}
+.hexes{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.hex{width:84px;height:92px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--acc)}
+.hex>div{margin:3px;height:calc(100% - 6px);clip-path:inherit;background:var(--card);display:grid;place-content:center;text-align:center}
+.hex b{font-size:21px;color:var(--ink)}.hex small{font-size:12px}.hex i{font-style:normal;font-size:9px;font-weight:800;color:var(--acc)}
+ul{margin:0;padding-left:18px;color:var(--ink);font-size:clamp(15px,1.9vw,19px);line-height:1.6}
+.foot{position:absolute;right:20px;bottom:12px;color:var(--mut);font-size:13px;text-align:right}
+.edit{position:absolute;top:12px;right:12px;z-index:3}
+nav{position:fixed;right:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px;z-index:9}
+nav button{width:12px;height:12px;border-radius:50%;border:2px solid var(--red);background:var(--card);padding:0}nav button.on{background:var(--red)}
+dialog{border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);width:min(560px,94vw);padding:20px}
+dialog::backdrop{background:#0008}label{display:block;font-size:13px;color:var(--mut);margin:10px 0 3px}
+input,textarea,select{width:100%;font:inherit;padding:9px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.acts{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+@media(max-width:760px){.body{grid-template-columns:1fr}nav{display:none}}
+</style></head><body>
+<header><div class="brand">Субхи заррин</div><span class="chip" id="st"></span><button class="btn ghost" id="rb">↻ Обновить</button><button class="btn ghost" id="xb" hidden>⬇ catalog.json</button><button class="btn ghost" id="eb" hidden>✎ Редактор</button><button class="btn" id="ab" hidden>+ Товар</button></header>
+<main id="m"></main><nav id="nv"></nav>
+<dialog id="dlg"><h3 id="dt" style="margin:0 0 4px">Товар</h3>
+<label>Название</label><input id="f_name"><div class="row"><div style="grid-column:span 2"><label>Тип</label><input id="f_kind" list="kl"><datalist id="kl"><option>Спред<option>Маргарин<option>Масло</datalist></div><div><label>Порядок</label><input id="f_order" type="number"></div><div><label>Цвет</label><input id="f_acc" type="color" style="padding:2px;height:40px"></div></div>
+<div class="row"><div><label>Шт в коробке</label><input id="f_box" type="number"></div><div><label>Вес, г</label><input id="f_weight" type="number"></div><div><label>Жирность</label><input id="f_fat"></div></div>
+<label>Описание (каждая строка — пункт)</label><textarea id="f_b" rows="5"></textarea>
+<div class="row"><div style="grid-column:span 2"><label>Фото-баннер</label><input id="f_h" type="file" accept="image/*"></div><div style="grid-column:span 2"><label>Фото упаковки</label><input id="f_p" type="file" accept="image/*"></div></div>
+<div class="acts"><button class="btn ghost" id="x_del" style="margin-right:auto;color:var(--red)">Удалить</button><button class="btn ghost" id="x_c">Отмена</button><button class="btn" id="x_s">Сохранить</button></div><div class="chip" id="msg"></div></dialog>
+<script>
+const IMGS={};
+const S1="Срок годности: от -20°C до +10°C 150 суток",S2="от +10°C до +15°C 60 суток",R="#e31e24",Y="#fbbf0c";
+let DEF=[
+{id:"p1",order:1,name:"Деревенское",kind:"Спред",box:40,weight:200,fat:"82,5%",acc:R,bullets:["СТ РТ ГОСТ Р 52100-2010","Продукт с натуральными молочными сливками",S1,S2]},
+{id:"p2",order:2,name:"Щедрая Душа",kind:"Спред",box:40,weight:200,fat:"72%",acc:Y,bullets:["СТ РТ ГОСТ Р 32188-2013","Продукт с натуральными молочными сливками",S1,S2]},
+{id:"p3",order:3,name:"Слойка",kind:"Маргарин",box:40,weight:200,fat:"82%",acc:R,bullets:["СТ РТ ГОСТ Р 32188-2013",S1,S2]},
+{id:"p4",order:4,name:"Шоколадница",kind:"Маргарин",box:60,weight:150,fat:"60%",acc:Y,bullets:["СТ РТ ГОСТ Р 52100-2010","Продукт с натуральным какао",S1,S2]},
+{id:"p5",order:5,name:"Сливочный Вкус",kind:"Маргарин",box:60,weight:150,fat:"30%",acc:R,bullets:["СТ РТ ГОСТ Р 32188-2013",S1,S2]}];
+let items=DEF,live=false,admin=false,edit=false,db=null,assets=null,cur=null,up={};
+const $=s=>document.querySelector(s);
+function h(t,a={},...c){const e=document.createElement(t);for(const k in a){if(k=="class")e.className=a[k];else if(k.startsWith("on"))e[k]=a[k];else e.setAttribute(k,a[k])}c.flat().forEach(x=>e.append(x&&x.nodeType?x:document.createTextNode(x==null?"":x)));return e}
+const hex=(v,u,l)=>h("div",{class:"hex"},h("div",{},h("b",{},v,h("small",{},u||"")),h("i",{},l)));
+function render(){
+ const list=[...items].sort((a,b)=>(a.order||0)-(b.order||0)),m=$("#m"),n=$("#nv");m.replaceChildren();n.replaceChildren();
+ list.forEach((p,i)=>{const im=IMGS[p.id]||{};
+  const s=h("section",{class:"prod",id:"s"+i,style:"--acc:"+(p.acc||R)},
+   h("div",{class:"hero"},p.heroUrl||im.hero?h("img",{src:p.heroUrl||im.hero,alt:""}):"",edit?h("button",{class:"btn edit",onclick:()=>open(p)},"Изменить"):""),
+   h("div",{class:"body"},h("div",{class:"pack"},p.packUrl||im.pack?h("img",{src:p.packUrl||im.pack,alt:p.name}):""),
+    h("div",{},h("div",{class:"kind"},p.kind),h("h2",{},p.name),
+     h("div",{class:"hexes"},hex(p.box,"шт","КОРОБКА"),hex(p.weight,"гр","ПАЧКА"),hex(p.fat,"","ЖИРЫ"),hex("ГМО","","БЕЗ")),
+     h("ul",{},(p.bullets||[]).map(t=>h("li",{},t))))),
+   h("div",{class:"foot"},"www.daleron.tj · "+(i+1)+"/"+list.length));
+  m.append(s);n.append(h("button",{"aria-label":p.name,onclick:()=>s.scrollIntoView({behavior:"smooth"})}))});
+ $("#st").textContent=statusText();$("#xb").hidden=!(admin&&local);
+ $("#eb").hidden=!admin;$("#ab").hidden=!(admin&&edit);$("#eb").textContent=edit?"✓ Готово":"✎ Редактор";
+ obs()}
+let io;function obs(){io&&io.disconnect();const b=[...document.querySelectorAll("#nv button")];io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){b.forEach(x=>x.classList.remove("on"));b[+e.target.id.slice(1)]?.classList.add("on")}}),{threshold:.5});document.querySelectorAll(".prod").forEach(s=>io.observe(s))}
+function open(p){cur=p;up={};const d=p||{name:"",kind:"Спред",box:40,weight:200,fat:"",acc:R,bullets:[],order:items.length+1};
+ $("#dt").textContent=p?"Изменить товар":"Новый товар";$("#x_del").hidden=!p;$("#msg").textContent="";
+ ["name","kind","box","weight","fat","order","acc"].forEach(k=>$("#f_"+k).value=d[k]);$("#f_b").value=(d.bullets||[]).join("\n");$("#f_h").value=$("#f_p").value="";$("#dlg").showModal()}
+async function shrink(f,w){const b=await createImageBitmap(f),r=Math.min(1,w/b.width),c=document.createElement("canvas");c.width=b.width*r;c.height=b.height*r;c.getContext("2d").drawImage(b,0,0,c.width,c.height);return new Promise(o=>c.toBlob(o,"image/jpeg",.82))}
+async function save(){if(!db)return;$("#msg").textContent="Сохраняю…";
+ try{if(!live)for(const d of DEF){const{id,...r}=d;await db.collection("products").doc(id).set(r)}
+  const d={name:$("#f_name").value.trim(),kind:$("#f_kind").value.trim(),box:+$("#f_box").value||0,weight:+$("#f_weight").value||0,fat:$("#f_fat").value.trim(),order:+$("#f_order").value||0,acc:$("#f_acc").value,bullets:$("#f_b").value.split("\n").map(x=>x.trim()).filter(Boolean),heroUrl:cur?.heroUrl||"",packUrl:cur?.packUrl||""};
+  for(const[k,f,w]of[["heroUrl",$("#f_h").files[0],1400],["packUrl",$("#f_p").files[0],700]])if(f){if(!assets)throw 0;d[k]=(await assets.upload(await shrink(f,w))).url}
+  await db.collection("products").doc(cur?.id||"p"+Date.now().toString(36)).set(d);$("#dlg").close()}catch(e){$("#msg").textContent="Не удалось сохранить"}}
+$("#x_s").onclick=save;$("#x_c").onclick=()=>$("#dlg").close();
+$("#x_del").onclick=async()=>{if(cur&&db&&confirm("Удалить «"+cur.name+"»?")){try{await db.collection("products").doc(cur.id).delete();$("#dlg").close()}catch(e){$("#msg").textContent="Ошибка"}}};
+$("#eb").onclick=()=>{edit=!edit;render()};$("#ab").onclick=()=>open(null);
+render();
+let upd=0;const stamp=t=>new Date(t).toLocaleString("ru",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+function statusText(){if(admin&&local)return"✎ режим админа (локально)";let s=0;try{s=+localStorage.getItem("sync")||0}catch(e){}return(navigator.onLine?"● онлайн":"○ офлайн")+(upd?" · актуально на "+stamp(upd):"")+(s&&Date.now()-s>864e5?" ⚠ обновите каталог":"")}
+addEventListener("online",()=>$("#st").textContent=statusText());addEventListener("offline",()=>$("#st").textContent=statusText());
+$("#rb").onclick=()=>location.reload();
+$("#xb").onclick=()=>{const j={version:Date.now(),updated:Date.now(),products:[...items].sort((a,b)=>(a.order||0)-(b.order||0))};h("a",{href:URL.createObjectURL(new Blob([JSON.stringify(j,null,1)],{type:"application/json"})),download:"catalog.json"}).click()};
+if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+(async()=>{try{const r=await fetch("catalog.json",{cache:"no-cache"}),j=await r.json();if(!r.headers.get("x-offline"))try{localStorage.setItem("sync",Date.now())}catch(e){}DEF=j.products;items=DEF;upd=j.updated}catch(e){}
+ if(location.hash=="#admin"){local=true;db=localDb();assets={upload:b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r({url:f.result});f.readAsDataURL(b)})};admin=true;db.collection("products").onSnapshot(q=>{if(!q.empty){items=q.docs.map(x=>({id:x.id,...x.data()}));live=true}else{items=DEF;live=false}render()})}
+ render()})();
+</script></body></html>
